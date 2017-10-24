@@ -6,17 +6,45 @@ var url = "mongodb://imprint:montu123@ds127065.mlab.com:27065/imprint";
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/montu', (request, response) => {
-    MongoClient.connect(url, function (err, db) {
-        if (err) {
-            console.log('ERROR');
+    // MongoClient.connect(url, function (err, db) {
+    //     if (err) {
+    //         console.log('ERROR');
+    //     }
+    //     else {
+    //         response.send({
+    //             name: 'Montu Thakore',
+    //             age: 22,
+    //             university: 'DAIICT',
+    //         });
+    //     }
+    // });
+    MongoClient.connect(url,(err, db) => {
+        if(err) {
+            return console.log('Unable To Connect To Mongodb Server');
         }
-        else {
-            response.send({
-                name: 'Montu Thakore',
-                age: 22,
-                university: 'DAIICT',
-            });
-        }
+        console.log('****Connected TO Mongodb Server****');
+        
+        db.collection('todos').insertOne({
+            text : 'Something Todo',
+            completed : false
+        }, (err, result) => {
+            if(err)
+                return console.log('Error To Insert Into Document..', err);
+            console.log(JSON.stringify(result.ops,undefined,2));
+        });
+        db.collection('users').insertOne({
+            name : 'MONTU THAKORE',
+            age : 22,
+            location : 'GOPPIPURA'
+        }, (err, result) => {
+            if(err)
+                return console.log('Error To Insert Into Document..', err);
+            console.log(JSON.stringify(result.ops,undefined,2));
+            console.log(result.ops[0]._id.getTimestamp());
+        });
+    
+        db.close();
+        console.log('****Connection Close****');
     });
 });
 
