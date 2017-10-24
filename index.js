@@ -6,17 +6,16 @@ var url = "mongodb://imprint:montu123@ds127065.mlab.com:27065/imprint";
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/montu', (request, response) => {
-    // MongoClient.connect(url, function (err, db) {
-    //     if (err) {
-    //         console.log('ERROR');
-    //     }
-    //     else {
-    //         console.log("Database Connected!");
-    //         db.close();
-    //     }
-    // });
-    response.send({
-        errorMessage : 'Error Handing Request'
+    MongoClient.connect(url, function (err, db) {
+        if (err) {
+            console.log('ERROR');
+        }
+        else {
+            response.send({
+                msg : 'Connection Successful'
+            });
+            db.close();
+        }
     });
 });
 
