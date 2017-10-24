@@ -12,9 +12,10 @@ app.get('/montu', (request, response) => {
         }
         else {
             response.send({
-                msg : 'Connection Successful'
+                name: 'Montu Thakore',
+                age: 22,
+                university: 'DAIICT',
             });
-            db.close();
         }
     });
 });
