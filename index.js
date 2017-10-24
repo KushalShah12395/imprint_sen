@@ -6,11 +6,12 @@ var url = "mongodb://imprint:montu123@ds127065.mlab.com:27065/imprint";
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/', (request, response) => {
-    MongoClient.connect(url, function (err, db) {
-        if (err) throw err;
-        console.log("Database created!");
-        db.close();
-    });    
+    // MongoClient.connect(url, function (err, db) {
+    //     if (err) throw err;
+    //     console.log("Database created!");
+    //     db.close();
+    // }); 
+    console.log("WORKING");   
 });
 
 app.listen(app.get('port'), function () {
