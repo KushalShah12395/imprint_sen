@@ -286,6 +286,19 @@ app.post('/api/getTweets', urlencodedParser, (request, response) => {
                     client.get('statuses/user_timeline', param, function(error, tweets, res) {
                         if( tweets.length < 200 ) {
                             if( firstPostID === -1 ) {
+                                for(var i in tweets) {
+                                    var obj = {
+                                        Postid: tweets[i].id,
+                                        Description: tweets[i].text,
+                                        Createdtime: tweets[i].created_at,
+                                        like: tweets[i].favorite_count,
+                                        retweetCount: tweets[i].retweet_count,
+                                        popularityScore: 0
+                                    };
+                                    var ans = (obj.retweetCount * 1.5) + obj.like;
+                                    obj.popularityScore = ans;
+                                    user[0].Post.push(obj);
+                                }
                                 db.collection('TwitterData').findOneAndUpdate({_id: user[0]._id}, {
                                     $set: {
                                         lastPostID: lastPostId1,
@@ -316,10 +329,12 @@ app.post('/api/getTweets', urlencodedParser, (request, response) => {
                                 Postid: tweets[i].id,
                                 Description: tweets[i].text,
                                 Createdtime: tweets[i].created_at,
-                                Symbols: tweets[i].entities.symbols,
-                                Hashtags: tweets[i].entities.hashtags,
                                 like: tweets[i].favorite_count,
+                                retweetCount: tweets[i].retweet_count,
+                                popularityScore: 0
                             };
+                            var ans = (obj.retweetCount * 1.5) + obj.like;
+                            obj.popularityScore = ans;
                             user[0].Post.push(obj);
                         }
                         getTweets();
@@ -355,6 +370,14 @@ app.post('/api/getTweets', urlencodedParser, (request, response) => {
             else {
                 var params = {screen_name: screenName};
                 client.get('users/show', params, function(error, user, res) {
+                    if(user.errors[0].code === 50) {
+                        response.send({
+                            status_code: 400,
+                            data: {
+                                msg: user.errors[0].message
+                            }
+                        });
+                    }
                     var userObj = {
                         User_ID: user.id,
                         Name: user.name,
