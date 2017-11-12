@@ -1,10 +1,12 @@
 const {MongoClient, ObjectID} = require('mongodb');
 const express = require('express');
+var cors = require('cors')
 var app = new express();
 var bodyParser = require('body-parser');
 var url = "mongodb://imprint:montu123@ds127065.mlab.com:27065/imprint";
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.use(bodyParser.json());
+app.use(cors());
 app.set('port', (process.env.PORT || 5000));
 const bcrypt = require('bcrypt-nodejs');
 
